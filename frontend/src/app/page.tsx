@@ -5,6 +5,7 @@ import Image from "next/image";
 import { bestMatchIcon } from "@/lib/iconMatch";
 import MapView from "@/components/map/MapView";
 import SpeciesCompositionCard from "@/components/charts/SpeciesCompositionCard";
+import ConfidenceChart from "@/components/charts/ConfidenceChart";
 
 type Marker = { id: string; coords: [number, number] };
 
@@ -167,10 +168,15 @@ export default function Home() {
               )}
             </div>
           </div>
-          {/* Composition chart card - below image + map */}
+          {/* Charts section - below image + map */}
           <div className="mt-6">
-            <div className="w-full lg:w-1/3">
-              <SpeciesCompositionCard selectedName={selected?.name} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="w-full">
+                <SpeciesCompositionCard selectedName={selected?.name} />
+              </div>
+              <div className="w-full">
+                <ConfidenceChart selectedName={selected?.name} />
+              </div>
             </div>
           </div>
         </section>
