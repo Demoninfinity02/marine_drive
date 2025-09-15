@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 96 96" aria-label="detritus">
+<defs>
+<linearGradient id="g-detritus" x1="0" x2="1"><stop offset="0%" stop-color="#54E48A" stop-opacity="1"/><stop offset="100%" stop-color="#54E48A" stop-opacity="0.75"/></linearGradient>
+<filter id="f-detritus" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="100%" height="100%" fill="none"/>
+<g filter="url(#f-detritus)">
+<rect x="30" y="40" width="6" height="3" rx="1" stroke="url(#g-detritus)" stroke-width="3" fill="none"/>
+<rect x="40" y="50" width="6" height="3" rx="1" stroke="url(#g-detritus)" stroke-width="3" fill="none"/>
+<rect x="55" y="42" width="6" height="3" rx="1" stroke="url(#g-detritus)" stroke-width="3" fill="none"/>
+<rect x="48" y="60" width="6" height="3" rx="1" stroke="url(#g-detritus)" stroke-width="3" fill="none"/>
+<rect x="36" y="60" width="6" height="3" rx="1" stroke="url(#g-detritus)" stroke-width="3" fill="none"/>
+<rect x="60" y="30" width="6" height="3" rx="1" stroke="url(#g-detritus)" stroke-width="3" fill="none"/>
+</g>
+<rect x="30" y="40" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.2" fill="none" />
+<rect x="40" y="50" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.2" fill="none" />
+<rect x="55" y="42" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.2" fill="none" />
+<rect x="48" y="60" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.2" fill="none" />
+<rect x="36" y="60" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.2" fill="none" />
+<rect x="60" y="30" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.2" fill="none" />
+</svg>
