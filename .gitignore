@@ -1,1 +1,40 @@
-marine_drive/
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.venv/
+venv/
+ENV/
+env/
+
+# Django / SQLite
+*.sqlite3
+db.sqlite3
+
+# Media & logs
+media/
+logs/
+*.log
+
+# Environment & tooling
+.env
+.env.*
+*.env
+.pytest_cache/
+.coverage*
+.mypy_cache/
+.idea/
+.vscode/
+
+# Node (if frontend gets added later)
+node_modules/
+
+# Caches
+.cache/
+
