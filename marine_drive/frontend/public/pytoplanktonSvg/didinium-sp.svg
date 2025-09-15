@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 96 96" aria-label="Didinium_sp">
-<defs>
-<linearGradient id="g-didinium-sp" x1="0" x2="1"><stop offset="0%" stop-color="#F6B15A" stop-opacity="1"/><stop offset="100%" stop-color="#F6B15A" stop-opacity="0.75"/></linearGradient>
-<filter id="f-didinium-sp" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-</defs>
-<rect width="100%" height="100%" fill="none"/>
-<g filter="url(#f-didinium-sp)"><path d="M40 30 C30 28 24 40 34 50 C28 58 42 70 56 62 C70 54 72 40 60 34 C50 28 44 32 40 30 Z" fill="none" stroke="url(#g-didinium-sp)" stroke-width="6"/></g>
-<path d="M40 30 C30 28 24 40 34 50 C28 58 42 70 56 62 C70 54 72 40 60 34 C50 28 44 32 40 30 Z" fill="none" stroke="currentColor" stroke-width="2"/>
-</svg>
