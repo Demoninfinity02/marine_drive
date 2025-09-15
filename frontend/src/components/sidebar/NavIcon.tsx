@@ -2,14 +2,23 @@
 import { type LucideIcon } from "lucide-react";
 import { cn } from "../utils/cn";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   icon: LucideIcon;
   label: string;
   active?: boolean;
+  href?: string;
 };
 
-export const NavIcon: React.FC<Props> = ({ icon: Icon, label, active }) => {
+export const NavIcon: React.FC<Props> = ({ icon: Icon, label, active, href }) => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (href) {
+      router.push(href);
+    }
+  };
   return (
     <div className="relative">
       {active && (
@@ -22,6 +31,7 @@ export const NavIcon: React.FC<Props> = ({ icon: Icon, label, active }) => {
         type="button"
         title={label}
         aria-label={label}
+        onClick={handleClick}
         className={cn(
           "group relative grid h-12 w-12 place-items-center rounded-2xl transition",
           active

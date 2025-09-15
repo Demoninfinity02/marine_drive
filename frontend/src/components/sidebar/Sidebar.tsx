@@ -4,7 +4,7 @@ import {
   Home,
   Activity,
   Bell,
-  Search,
+  Zap,
   Settings,
   Users2,
   BarChart3,
@@ -26,7 +26,7 @@ export default function Sidebar() {
         {/* Primary group */}
         <nav className="flex flex-col items-center gap-3">
           <NavIcon icon={Home} label="Dashboard" active />
-          <NavIcon icon={Search} label="Search" />
+          <NavIcon icon={Zap} label="Live Feed Analysis" href="/live-feed-analysis" />
           <NavIcon icon={Activity} label="Analytics" />
           <NavIcon icon={Users2} label="Users" />
         </nav>
