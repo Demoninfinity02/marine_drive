@@ -5,6 +5,7 @@ import { cn } from "@/components/utils/cn";
 type RawPhyto = {
   phytoplanktonscientificName: string;
   "no of that pyhtoplankon": string | number;
+  Confidence: string | number;
 };
 
 type Slice = { name: string; count: number; color: string };
