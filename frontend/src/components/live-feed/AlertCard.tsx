@@ -43,15 +43,30 @@ export default function AlertCard() {
     return () => { alive = false; };
   }, []);
 
-  // SSE
+  // Live updates via SSE
   useEffect(() => {
     const sse = new EventSource('/api/phytoplankton/stream');
     sseRef.current = sse;
     sse.onmessage = (ev) => {
-      try { const next = JSON.parse(ev.data); if (Array.isArray(next)) setData(next); } catch {}
+      console.log('AlertCard SSE message:', ev.data);
+      try {
+        const next = JSON.parse(ev.data);
+        if (Array.isArray(next)) {
+          console.log('AlertCard updating data:', next.length, 'items');
+          setData(next);
+        }
+      } catch (e) {
+        console.log('AlertCard parse error:', e);
+      }
     };
-    sse.onerror = () => { sse.close(); };
-    return () => { sse.close(); sseRef.current = null; };
+    sse.onerror = () => {
+      console.log('AlertCard SSE error');
+      sse.close();
+    };
+    return () => {
+      sse.close();
+      sseRef.current = null;
+    };
   }, []);
 
   const mostDangerous = useMemo(() => {

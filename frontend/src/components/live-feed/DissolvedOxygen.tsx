@@ -27,17 +27,30 @@ export default function DissolvedOxygen() {
     return () => { alive = false; };
   }, []);
 
+  // Live updates via SSE
   useEffect(() => {
     const sse = new EventSource("/api/phytoplankton/stream");
     sseRef.current = sse;
     sse.onmessage = (ev) => {
+      console.log('DissolvedOxygen SSE message:', ev.data);
       try {
         const next = JSON.parse(ev.data);
-        if (Array.isArray(next)) setData(next);
-      } catch {}
+        if (Array.isArray(next)) {
+          console.log('DissolvedOxygen updating data:', next.length, 'items');
+          setData(next);
+        }
+      } catch (e) {
+        console.log('DissolvedOxygen parse error:', e);
+      }
     };
-    sse.onerror = () => { sse.close(); };
-    return () => { sse.close(); sseRef.current = null; };
+    sse.onerror = () => {
+      console.log('DissolvedOxygen SSE error');
+      sse.close();
+    };
+    return () => {
+      sse.close();
+      sseRef.current = null;
+    };
   }, []);
 
   const { value, contributors, fallback } = useMemo(() => {
@@ -73,9 +86,12 @@ export default function DissolvedOxygen() {
 
   return (
     <div className="h-full bg-white rounded-xl border border-[var(--border)] shadow-sm overflow-hidden">
-      <div className="p-3 border-b border-[var(--border)]">
-        <h3 className="text-sm font-semibold text-[var(--foreground)]">Dissolved O₂</h3>
-        <p className="text-[10px] text-[var(--muted)]">mg/L {fallback && '(avg)'}</p>
+      <div className="p-3 border-b border-[var(--border)] flex items-center justify-between">
+        <div>
+          <h3 className="text-sm font-semibold text-[var(--foreground)]">Dissolved O₂</h3>
+          <p className="text-[10px] text-[var(--muted)]">mg/L {fallback && '(avg)'}</p>
+        </div>
+        <div className="text-[10px] text-[var(--muted)]">{loading ? '…' : fallback ? 'unweighted' : `n=${contributors}`}</div>
       </div>
       <div className="p-3 flex flex-col h-full">
         <div className="flex items-center justify-between mb-3">

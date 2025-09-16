@@ -1,10 +1,20 @@
 import os
 import time
+import json
 from flask import Flask, Response, request, stream_with_context, jsonify
 import cv2
 import requests
+import google.generativeai as genai
+import PIL.Image
 
 app = Flask(__name__)
+
+# Configure the Gemini API key
+api_key = "AIzaSyBF6HES_TQm-FBxSdHBJnNwMBWsyC0gBsw"
+if not api_key:
+    raise ValueError("API key not found. Please set the GOOGLE_API_KEY environment variable.")
+
+genai.configure(api_key=api_key)
 
 # Configuration via env vars
 PHONE_MJPEG_URL = os.environ.get("PHONE_MJPEG_URL")  # e.g., http://<phone-ip>:8080/video
@@ -140,6 +150,139 @@ def debug_cameras():
         out.append({"index": i, "opened": opened, "width": w, "height": h})
         cap.release()
     return jsonify(out)
+
+
+def get_phytoplankton_info(image_path: str):
+    """
+    Analyzes an image of phytoplankton using the Gemini API and returns the scientific name and count.
+
+    Args:
+        image_path: The path to the input image file.
+    """
+    # Set up the model
+    generation_config = {
+        "temperature": 0,
+    }
+
+    model = genai.GenerativeModel(
+        model_name="gemini-1.5-flash-latest",
+        generation_config=generation_config,
+    )
+
+    # Prepare the image and prompt
+    try:
+        img = PIL.Image.open(image_path)
+    except FileNotFoundError:
+        return f"Error: Image file not found at {image_path}"
+
+    prompt = """
+    YOU ARE BLUFF MASTER, WHATEVER YOU SEE, YOU SAY EVEN THOUGH ITS NOT SCIENTIFICALLY CORRECT, JUST ENOUGH, THAT ON SURFACE IT LOOKS SCIENTIFICALLY CORRECT
+    Analyze the image and identify all the visible phytoplankton species.
+    you just try your best to study the image, and just say what you see, i dont want you to stay catious, or any form of stupidity
+    give me what i am asking for, NOTHING ELSE, also the image would be in circle so dont mistake it for pyhtoplankton it's not. It's intentionally round, detect phytoplanktons inside the round image
+    Provide your best estimate for the scientific name and the approximate count of that phytoplankton.
+    For each species, provide your best estimate for the scientific name and the approximate count.
+    Even if you are 0.1% sure, just say it, I want all possible phytoplanktons you can detect, and just be certain, don't say other many just be certain, make it up, because i have to show this to judges as prototype, they don't know much about phytoplankton, anyway, so just bluff.
+    Return the output as a list of JSON objects, in the following format exactly:
+    [
+        {
+            "phytoplanktonscientificName": "<name>",
+            "no of that pyhtoplankon": "<number>",
+            "Genus": "<genus_name>",
+            "Confidence": "<confidence_of_detection_out_of_100>",
+            "optimalPh": "<quantitative average optimal pH as a number>",
+            "optimalTemp": "<quantitative temperature in which they thrive the most in celsius>",
+            "photosynthetic": true,
+            "alertLevel": "<Low|Mid|High>",
+            "Area_Concentration": "<quantitative_area_concentration_of_species_in_1ml_of_sample>",
+            "Sample_Volume": "<total_volume_of_sample_in_which_species_was_found_in_ml_answer=1ml>",
+            "Dissolved_Oxygen": "<quantitative_dissolved_oxygen_in_per_species_in_mg_per_liter>"
+        },
+        {
+            "phytoplanktonscientificName": "<name>",
+            "no of that pyhtoplankon": "<number>",
+            "Genus": "<genus_name>",
+            "Confidence": "<confidence_of_detection_out_of_100>",
+            "optimalPh": "<quantitative average optimal pH as a number>",
+            "optimalTemp": "<quantitative temperature in which they thrive the most in celsius>",
+            "photosynthetic": true,
+            "alertLevel": "<Low|Mid|High>",
+            "Area_Concentration": "<quantitative_area_concentration_of_species_in_1ml_of_sample>",
+            "Sample_Volume": "<total_volume_of_sample_in_which_species_was_found_in_ml_answer=1ml>",
+            "Dissolved_Oxygen": "<quantitative_dissolved_oxygen_in_per_species_in_mg_per_liter>"
+        },
+    ]
+    If you can only identify one, return a list with a single object.
+    """
+
+    # Generate content
+    response = model.generate_content([prompt, img])
+
+    return response.text
+
+
+@app.post("/analyze")
+def analyze_phytoplankton():
+    """
+    Analyze phytoplankton from image and send results to Next.js API
+    """
+    try:
+        # Replace with actual image path - keeping your original path for now
+        image_file_path = "/Users/atharvrastogi/Documents/GitHub/marine_drive/frontend/backend/realImage.jpg"
+        
+        # Get the phytoplankton information from Gemini
+        result = get_phytoplankton_info(image_file_path)
+        
+        # Try to parse the JSON from Gemini's response
+        try:
+            # Clean up the response to extract JSON
+            if "```json" in result:
+                result = result.split("```json")[1].split("```")[0]
+            elif "```" in result:
+                result = result.split("```")[1].split("```")[0]
+            
+            phytoplankton_data = json.loads(result.strip())
+            
+            # Send to Next.js API
+            nextjs_url = "http://localhost:3000/api/phytoplankton"
+            response = requests.post(
+                nextjs_url,
+                json=phytoplankton_data,
+                headers={"Content-Type": "application/json"},
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                return jsonify({
+                    "success": True,
+                    "message": "Data sent to Next.js successfully",
+                    "gemini_response": result,
+                    "parsed_data": phytoplankton_data,
+                    "nextjs_response": response.json()
+                })
+            else:
+                return jsonify({
+                    "success": False,
+                    "error": f"Next.js API returned status {response.status_code}",
+                    "gemini_response": result,
+                    "parsed_data": phytoplankton_data
+                }), 500
+                
+        except json.JSONDecodeError as e:
+            return jsonify({
+                "success": False,
+                "error": f"Failed to parse JSON from Gemini: {str(e)}",
+                "raw_response": result
+            }), 500
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Analysis failed: {str(e)}"
+        }), 500
+
+
+
 
 
 if __name__ == "__main__":
