@@ -50,12 +50,16 @@ export default function TopSpecies() {
     const sse = new EventSource("/api/phytoplankton/stream");
     sseRef.current = sse;
     sse.onmessage = (ev) => {
+      console.log('TopSpecies SSE message:', ev.data);
       try {
         const next = JSON.parse(ev.data);
         if (Array.isArray(next)) {
+          console.log('TopSpecies updating data:', next.length, 'items');
           setData(next);
         }
-      } catch {}
+      } catch (e) {
+        console.log('TopSpecies parse error:', e);
+      }
     };
     sse.onerror = () => {
       // On error, close and let initial snapshot remain

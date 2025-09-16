@@ -25,7 +25,7 @@ export default function Sidebar() {
 
         {/* Primary group */}
         <nav className="flex flex-col items-center gap-3">
-          <NavIcon icon={Home} label="Dashboard" active />
+          <NavIcon icon={Home} label="Dashboard" href="/" />
           <NavIcon icon={Zap} label="Live Feed Analysis" href="/live-feed-analysis" />
           <NavIcon icon={Activity} label="Analytics" />
           <NavIcon icon={Users2} label="Users" />
