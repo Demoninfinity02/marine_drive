@@ -5,3 +5,5 @@ export { default as AreaConcentration } from './AreaConcentration';
 export { default as SampleVolume } from './SampleVolume';
 export { default as WaterPH } from './WaterPH';
 export { default as Temperature } from './Temperature';
+export { default as DissolvedOxygen } from './DissolvedOxygen';
+export { default as AlertCard } from './AlertCard';

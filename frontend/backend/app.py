@@ -22,7 +22,7 @@ BOUNDARY = "frame"
 def mjpeg_generator_from_http(url: str):
     """Proxy an existing MJPEG HTTP stream and re-emit it with our boundary."""
     with requests.get(url, stream=True, timeout=10) as r:
-        r.raise_for_status()top
+        r.raise_for_status()
         content_type = r.headers.get("Content-Type", "")
         boundary = None
         if "multipart" in content_type and "boundary=" in content_type:
