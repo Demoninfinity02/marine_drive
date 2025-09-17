@@ -10,7 +10,7 @@ export default function LiveFeed() {
   useEffect(() => {
     const url =
       process.env.NEXT_PUBLIC_MJPEG_URL ||
-      "http://127.0.0.1:5001/stream/mjpeg?source=0";
+      "http://10.223.141.65:5001/stream/mjpeg?source=0";
     // Quick HEAD check to avoid broken <img> loop; browsers often block HEAD for mjpeg, so fall back to direct usage
     setSrc(url);
   }, []);
