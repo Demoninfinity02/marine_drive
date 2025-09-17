@@ -3,3 +3,7 @@ opencv-python==4.10.0.84
 requests==2.32.3
 google-generativeai
 pillow
+
+
+curl -X POST http://127.0.0.1:5001/auto-capture/start
+curl -X POST http://127.0.0.1:5001/auto-capture/stop
