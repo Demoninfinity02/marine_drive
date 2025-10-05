@@ -38,3 +38,6 @@ node_modules/
 # Caches
 .cache/
 
+# Large raw datasets (kept out of git; retrieve separately or via data portal)
+Phytoplankton_harmonized_database_revised.csv
+
